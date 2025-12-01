@@ -23,6 +23,7 @@ npm install -D @types/node
 ## 5. ShadCN UI 초기화
 ```
 npx shadcn@latest init
+```
 
 ## 5-2. react-router-dom 설치
 ```
