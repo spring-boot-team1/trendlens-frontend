@@ -105,7 +105,11 @@ export default function Header() {
 
         {/* 데스크톱 로그인 영역 */}
         <div className="hidden md:flex items-center gap-4">
-          <button className="text-sm hover:text-gray-600">로그인</button>
+          <button className="text-sm hover:text-gray-600">
+            <Link to="/login" className="hover:text-gray-600">
+                    로그인
+            </Link>
+          </button>
           <button className="text-sm hover:text-gray-600">회원가입</button>
         </div>
 
