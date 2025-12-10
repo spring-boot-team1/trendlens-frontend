@@ -21,7 +21,17 @@ npx shadcn@latest init
 npm install react-router-dom
 ```
 
-## 5. .env 파일 추가
+## 5. axios 설치
+```
+npm install axios
+```
+
+## 6. three.js 설치
+```
+npm install three
+```
+
+## 7. .env 파일 추가
 디스코드에서 공유받은 .env 파일을 루트 폴더에 추가하세요.
 
 ## 6. API 호출 방법(/예시)
