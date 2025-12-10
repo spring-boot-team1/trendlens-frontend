@@ -34,7 +34,7 @@ npm install three
 ## 7. .env 파일 추가
 디스코드에서 공유받은 .env 파일을 루트 폴더에 추가하세요.
 
-## 6. API 호출 방법(/예시)
+## 8. API 호출 방법(/예시)
 ```tsx
 const trend = import.meta.env.API_CONTEXT_ROOT;
 
@@ -47,6 +47,18 @@ const response = await fetch(`${trend}/api/v1/login`, {
 });
 ```
 
+## 8-1. API 호출방법(/axios)
+```tsx
+const res = await axios.post<T>(
+        `${trend}/api/v1/analyze/body`
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${accessToken}`,  // JWT 쓰면 여기 추가
+          },
+        }
+      );
+```
 ---
 
 # 📖 React Router 및 페이지 관리 가이드 (초보 팀원 필독!)
