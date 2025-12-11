@@ -21,7 +21,7 @@ function PaymentCheckout() {
     const paymentWidgetRef = useRef<PaymentWidgetInstance | null>(null);
 
     //테스트용 금액 (단위: 원)
-    const [amount] = useState<number>(200);
+    const [amount] = useState<number>(4900);
 
     // 화면이 한 번 렌더링된 후 Toss 위젯 초기화
     useEffect(() => {
@@ -64,8 +64,8 @@ function PaymentCheckout() {
       await paymentWidgetRef.current.requestPayment({
         orderId,
         orderName,
-        successUrl: `${window.location.origin}/payments/success`,
-        failUrl: `${window.location.origin}/payments/fail`,
+        successUrl: `${window.location.origin}/payment/success`,
+        failUrl: `${window.location.origin}/payment/fail`,
       });
     } catch (err) {
       console.error("결제 요청 실패:", err);
