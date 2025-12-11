@@ -94,8 +94,8 @@ export default function Header() {
                   <Link to="/content/magazine" className="hover:text-gray-600">
                     매거진
                   </Link>
-                  <Link to="/bodyanalyze" className="hover:text-gray-600">
-                    AI체형분석
+                  <Link to="/content/news" className="hover:text-gray-600">
+                    패션 뉴스
                   </Link>
                 </div>
               </NavigationMenuContent>
@@ -105,7 +105,11 @@ export default function Header() {
 
         {/* 데스크톱 로그인 영역 */}
         <div className="hidden md:flex items-center gap-4">
-          <button className="text-sm hover:text-gray-600">로그인</button>
+          <button className="text-sm hover:text-gray-600">
+            <Link to="/login" className="hover:text-gray-600">
+                    로그인
+            </Link>
+          </button>
           <button className="text-sm hover:text-gray-600">회원가입</button>
         </div>
 
@@ -241,7 +245,7 @@ export default function Header() {
                   onClick={closeMobileMenu}
                   className="hover:text-gray-600"
                 >
-                  AI체형분석
+                  패션 뉴스
                 </Link>
               </div>
             </div>
@@ -261,5 +265,3 @@ export default function Header() {
     </header>
   );
 }
-
-
