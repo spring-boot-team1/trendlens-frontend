@@ -1,5 +1,6 @@
-import { useAuthStore } from "@/store/authStore";
 import axios from "axios";
+import { useAuthStore } from "@/store/authStore";
+import { jwtDecode } from "jwt-decode";
 console.log("BASE_URL: " + import.meta.env.VITE_API_BASE_URL);
 
 const axiosInstance = axios.create({
@@ -20,21 +21,6 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 //응답 인터셉터
-// axiosInstance.interceptors.response.use(
-//     (response) => response,
-//     async (error) => {
-//         const originalRequest = error.config;
-//         //401 처리, refreshtoken으로 access토큰 재발급 로직 넣기 좋음
-//         if(error.response?.status === 401 && !originalRequest._retry) {
-//             originalRequest._retry = true;
-//             try {
-                
-//             }
-//             console.log("Access Token expired. Try refreshing token...");
-//             //refresh 로직 구현 필요 TODO
-//         }
-//         return Promise.reject(error);
-//     });
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -49,19 +35,26 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const res = await axiosInstance.post("/api/v1/reissue", null, {
-          skipAuth: true,
-        });
+        const reissueRes = await axiosInstance.post(
+            "/api/v1/reissue",
+            null, 
+            { skipAuth: true }
+        );
 
-        const authHeader = res.headers["authorization"];
+        //새 액세스토큰 추출
+        const authHeader = reissueRes.headers["authorization"];
+        if(!authHeader) throw new Error("Authorization header missing");
+        
         const newToken = authHeader?.replace("Bearer ", "");
+        const newClaims = jwtDecode(newToken);
+        
+        useAuthStore.getState().setAuth(newToken, newClaims);
+        originalRequest.headers = originalRequest.headers || {};
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
-        if (newToken) {
-          useAuthStore.getState().setAccessToken(newToken);
+        //기존 요청 재시도
+        return axiosInstance(originalRequest);
 
-          originalRequest.headers.Authorization = `Bearer ${newToken}`;
-          return axiosInstance(originalRequest);
-        }
       } catch (e) {
         useAuthStore.getState().clearAuth();
         window.location.href = "/login";
