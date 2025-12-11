@@ -94,8 +94,8 @@ export default function Header() {
                   <Link to="/content/magazine" className="hover:text-gray-600">
                     매거진
                   </Link>
-                  <Link to="/content/news" className="hover:text-gray-600">
-                    패션 뉴스
+                  <Link to="/bodyanalyze" className="hover:text-gray-600">
+                    AI체형분석
                   </Link>
                 </div>
               </NavigationMenuContent>
@@ -241,11 +241,11 @@ export default function Header() {
                   매거진
                 </Link>
                 <Link
-                  to="/content/news"
+                  to="/bodyanalyze"
                   onClick={closeMobileMenu}
                   className="hover:text-gray-600"
                 >
-                  패션 뉴스
+                  AI체형분석
                 </Link>
               </div>
             </div>
