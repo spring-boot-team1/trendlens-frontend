@@ -141,7 +141,7 @@ export default function Header() {
               </button>
               <button
                 className="text-sm hover:text-gray-600"
-                onClick={() => navigate("/signup")}
+                onClick={() => navigate("/register")}
               >
                 회원가입
               </button>
@@ -326,7 +326,7 @@ export default function Header() {
                 <button
                   className="text-sm text-left hover:text-gray-600"
                   onClick={() => {
-                    navigate("/signup");
+                    navigate("/register");
                     closeMobileMenu();
                   }}
                 >

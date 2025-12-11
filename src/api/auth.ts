@@ -48,3 +48,7 @@ export const logout = async () => {
     return false;
   }
 };
+
+export const signup = (data: any) => {
+  return axiosInstance.post("/api/v3/signup", data);
+};
