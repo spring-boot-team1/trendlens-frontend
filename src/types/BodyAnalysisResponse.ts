@@ -1,3 +1,4 @@
+import type { FashionRecommendResult } from "./FashionRecommend";
 import type { Gender } from "./Gender";
 
 export type BodyAnalysisResponse = {
@@ -15,5 +16,5 @@ export type BodyAnalysisResponse = {
   seqBodyAnalysis?: number;
   seqBodyMetrics?: number;
   promptUsed?: string | null;
-  aiResult?: string | null;
+  aiResult?: string | FashionRecommendResult | null;
 };
