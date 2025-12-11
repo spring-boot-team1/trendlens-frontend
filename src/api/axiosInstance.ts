@@ -1,8 +1,8 @@
 import axios from "axios";
-const API = import.meta.env.VITE_BACKEND_API_BASE_URL;
+console.log("BASE_URL: " + import.meta.env.VITE_API_BASE_URL);
 
 const axiosInstance = axios.create({
-    baseURL: API,
+    baseURL: import.meta.env.VITE_API_BASE_URL,
     timeout: 5000,
     withCredentials: true, //쿠키 기반 인증 시 필요함
 });
