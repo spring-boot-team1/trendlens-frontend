@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/store/authStore";
 import axiosInstance from "./axiosInstance";
 
 export const login = async(email: string, password: string) => {
@@ -16,10 +17,14 @@ export const login = async(email: string, password: string) => {
 
     //accessToken: header에 위치
     const authHeader = res.headers["authorization"];
+    
     if(authHeader) {
-        const accessToken = authHeader.replace("Bearer ", "");
         //AccessToken은 로컬스토리지에 저장
-        localStorage.setItem("accessToken", accessToken);
+        // localStorage.setItem("accessToken", accessToken);
+        
+        //Authstore(zustand에 메모리 방식으로 저장)
+        const accessToken = authHeader.replace("Bearer ", "");
+        useAuthStore.getState().setAccessToken(accessToken);
     } else {
         console.error("Auth header 없음. 백엔드 응답 확인 필요");
     }
