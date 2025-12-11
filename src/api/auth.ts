@@ -14,21 +14,18 @@ export const login = async(email: string, password: string) => {
         skipAuth:true,
     });
 
-    // const res = await axiosInstance.post(
-    //     "/login", 
-    //     params,
-    //     {
-    //         headers: {
-
-    //         }, 
-    //     },
-    //     {skipAuth: true}
-    // );
-    //서버에서 내려준 값에 맞게 수정
-    const { accessToken } = res.data;
+    //accessToken: header에 위치
+    const authHeader = res.headers["authorization"];
+    if(authHeader) {
+        const accessToken = authHeader.replace("Bearer ", "");
+        //AccessToken은 로컬스토리지에 저장
+        localStorage.setItem("accessToken", accessToken);
+    } else {
+        console.error("Auth header 없음. 백엔드 응답 확인 필요");
+    }
     
-    //AccessToken은 로컬스토리지에 저장
-    localStorage.setItem("accessToken", accessToken);
+    
+    
     //refreshToken은 쿠키 기반이어서 저장하지 않는다.
     return res.data;
 }
