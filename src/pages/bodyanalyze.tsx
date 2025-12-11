@@ -5,6 +5,8 @@ import type { Gender } from "@/types/Gender";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import MeshViewerBox from "@/components/bodyAnalyzeInc/MeshViewerBox";
+import AiResultBox from "@/components/bodyAnalyzeInc/FashionRecommendBox";
+import FashionRecommendBox from "@/components/bodyAnalyzeInc/FashionRecommendBox";
 
 
 const trend = import.meta.env.VITE_API_BASE_URL;
@@ -97,8 +99,9 @@ export default function BodyAnalyze() {
                 onClickMeasure={handleAnalyze}
                 isLoading={isLoading}
             />
+            <FashionRecommendBox data={data} isLoading={isLoading}/>
             <MeshViewerBox meshUrl={data?.meshUrl} isLoading={isLoading} />
-            <Skeleton className="w-[520px] h-[750px] rounded-3xl" />
+            
         </div>
     );
 }
