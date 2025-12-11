@@ -2,12 +2,10 @@ import OriginImageBox from "@/components/bodyAnalyzeInc/OriginImageBox";
 import type { BodyAnalysisResponse } from "@/types/BodyAnalysisResponse";
 import type { Gender } from "@/types/Gender";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import MeshViewerBox from "@/components/bodyAnalyzeInc/MeshViewerBox";
 import FashionRecommendBox from "@/components/bodyAnalyzeInc/FashionRecommendBox";
-
-
-const trend = import.meta.env.VITE_API_BASE_URL;
+import axiosInstance from "@/api/axiosInstance";
+import { useAuthStore } from "@/store/authStore";
 
 export default function BodyAnalyze() {
 
@@ -21,6 +19,8 @@ export default function BodyAnalyze() {
     const [gender, setGender] = useState<Gender>("U");  // ✅ 여기도 공통 타입
 
     const [isLoading, setIsLoading] = useState(false);
+
+    const seqAccount = useAuthStore((s) => s.seqAccount);
 
     const handleFileSelect = (newFile: File) => {
         setFile(newFile);
@@ -43,6 +43,10 @@ export default function BodyAnalyze() {
             alert("키와 몸무게를 입력해 주세요.");
             return;
         }
+        if (!seqAccount) {
+            alert("로그인 정보가 없습니다. 다시 로그인해 주세요.");
+            return;
+        }
 
         try {
             setIsLoading(true);
@@ -53,17 +57,12 @@ export default function BodyAnalyze() {
             formData.append("weightKg", weight);
             formData.append("gender", gender);
             // TODO: 로그인 정보에서 실제 seqAccount 꺼내 쓰면 됨
-            formData.append("seqAccount", "1");
+            formData.append("seqAccount", String(seqAccount));
 
-            const res = await axios.post<BodyAnalysisResponse>(
-                `${trend}/api/v1/analyze/body`,
+            const res = await axiosInstance.post<BodyAnalysisResponse>(
+                `/api/v1/analyze/body`,
                 formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                        // Authorization: `Bearer ${accessToken}`,  // JWT 쓰면 여기 추가
-                    },
-                }
+
             );
 
             setData(res.data);
@@ -97,9 +96,9 @@ export default function BodyAnalyze() {
                 onClickMeasure={handleAnalyze}
                 isLoading={isLoading}
             />
-            <FashionRecommendBox data={data} isLoading={isLoading}/>
+            <FashionRecommendBox data={data} isLoading={isLoading} />
             <MeshViewerBox meshUrl={data?.meshUrl} isLoading={isLoading} />
-            
+
         </div>
     );
 }
