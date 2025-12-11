@@ -36,3 +36,15 @@ export const login = async(email: string, password: string) => {
     //refreshToken은 쿠키 기반이어서 저장하지 않는다.
     return { accessToken, claims };
 }
+
+export const logout = async () => {
+  try {
+    await axiosInstance.post("/api/v1/logout");
+
+    useAuthStore.getState().clearAuth();  // 상태 초기화
+    return true;
+  } catch (err) {
+    console.error("Logout failed:", err);
+    return false;
+  }
+};
