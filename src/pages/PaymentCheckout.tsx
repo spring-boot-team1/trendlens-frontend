@@ -21,7 +21,7 @@ function PaymentCheckout() {
     const paymentWidgetRef = useRef<PaymentWidgetInstance | null>(null);
 
     //테스트용 금액 (단위: 원)
-    const [amount] = useState<number>(100);
+    const [amount] = useState<number>(200);
 
     // 화면이 한 번 렌더링된 후 Toss 위젯 초기화
     useEffect(() => {
