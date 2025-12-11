@@ -16,7 +16,9 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async () => {
+  const handleLogin = async (e?:React.FormEvent) => {
+    if (e) e.preventDefault();
+    
     setError("");
     setLoading(true);
 
@@ -43,7 +45,7 @@ export default function Login() {
             로그인
           </CardTitle>
         </CardHeader>
-
+        <form onSubmit={handleLogin}>
         <CardContent className="space-y-4">
           <div className="space-y-1">
             <Label htmlFor="email">이메일</Label>
@@ -71,14 +73,12 @@ export default function Login() {
             <p className="text-sm text-red-500 text-center">{error}</p>
           )}
 
-          <Button
-            className="w-full"
-            disabled={loading}
-            onClick={handleLogin}
-          >
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "로그인 중..." : "로그인"}
           </Button>
+
         </CardContent>
+        </form>
       </Card>
     </div>
   );
