@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "@/api/auth";
+import { useAuthStore } from "@/store/authStore";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,11 @@ export default function Login() {
 
     try {
       await login(email, password);
-      navigate("/mypage"); // 로그인 성공 후 이동할 경로
+
+      //Zustand 상태 확인
+      console.log("Zustand State >>>", useAuthStore.getState());
+
+      navigate("/"); // 로그인 성공 후 이동할 경로
     } catch (err) {
       console.error(err);
       setError("이메일 또는 비밀번호가 올바르지 않습니다.");
