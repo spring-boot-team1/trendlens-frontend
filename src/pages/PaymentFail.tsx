@@ -12,7 +12,7 @@ function PaymentFail() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full">
-        <h1 className="text-2xl font-semibold text-red-600 mb-4">
+        <h1 className="text-2xl font-semibold text-red-500 mb-4">
           결제에 실패했습니다
         </h1>
 
