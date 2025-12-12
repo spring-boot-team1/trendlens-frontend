@@ -1,11 +1,9 @@
 import OriginImageBox from "@/components/bodyAnalyzeInc/OriginImageBox";
-import { Skeleton } from "@/components/ui/skeleton";
 import type { BodyAnalysisResponse } from "@/types/BodyAnalysisResponse";
 import type { Gender } from "@/types/Gender";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import MeshViewerBox from "@/components/bodyAnalyzeInc/MeshViewerBox";
-import AiResultBox from "@/components/bodyAnalyzeInc/FashionRecommendBox";
 import FashionRecommendBox from "@/components/bodyAnalyzeInc/FashionRecommendBox";
 
 
