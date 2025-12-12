@@ -26,7 +26,7 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     // ❗ 재발급 API 오류일 경우 무한 루프 방지
-    if (originalRequest.url.includes("/api/v1/reissue")) {
+    if (originalRequest.url.includes("api/v1/reissue")) {
       return Promise.reject(error);
     }
 
@@ -36,7 +36,7 @@ axiosInstance.interceptors.response.use(
 
       try {
         const reissueRes = await axiosInstance.post(
-            "/api/v1/reissue",
+            "api/v1/reissue",
             null, 
             { skipAuth: true }
         );

@@ -9,7 +9,7 @@ export const login = async(email: string, password: string) => {
 
     //로그인 요청(x-www-form-urlencoded)
     const res = await axiosInstance.post(
-        "/login",
+        "login",
         params, {
         headers: {
             "Content-Type" : "application/x-www-form-urlencoded",
@@ -39,7 +39,7 @@ export const login = async(email: string, password: string) => {
 
 export const logout = async () => {
   try {
-    await axiosInstance.post("/api/v1/logout");
+    await axiosInstance.post("api/v1/logout");
 
     useAuthStore.getState().clearAuth();  // 상태 초기화
     return true;
@@ -50,5 +50,5 @@ export const logout = async () => {
 };
 
 export const signup = (data: any) => {
-  return axiosInstance.post("/api/v3/signup", data);
+  return axiosInstance.post("api/v3/signup", data);
 };
