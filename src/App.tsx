@@ -9,7 +9,7 @@ function App() {
       
       <Header />
 
-      <main className="pt-20"> 
+      <main className="pt-15"> 
         <Routes>
           {/* 메인 페이지 */}
           <Route path="/" element={<RankingPage />} />

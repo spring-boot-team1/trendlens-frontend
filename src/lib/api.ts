@@ -4,6 +4,7 @@ import type { TrendItem, InsightResult } from "../types/trend";
 // 백엔드 주소 설정 (CORS 설정이 백엔드에 되어있어야 함)
 const api = axios.create({
   baseURL: "http://localhost:8080/trend/api/trends",
+  withCredentials: true
 });
 
 export const trendApi = {
