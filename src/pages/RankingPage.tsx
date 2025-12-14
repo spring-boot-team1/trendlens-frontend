@@ -1,3 +1,4 @@
+{/* 랭킹페이지 */}
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { trendApi } from "@/lib/api";
@@ -106,7 +107,7 @@ export default function RankingPage() {
 
   const handleSearch = () => {
     if (!searchTerm.trim()) return;
-    goInsight(searchTerm);
+    navigate(`/search?keyword=${encodeURIComponent(searchTerm)}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

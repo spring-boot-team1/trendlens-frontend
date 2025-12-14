@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "@/components/inc/header"; 
 import RankingPage from "./pages/RankingPage";
 import InsightPage from "./pages/InsightPage";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
         <Routes>
           {/* 메인 페이지 */}
           <Route path="/" element={<RankingPage />} />
-          
+          {/* 검색 페이지*/}
+          <Route path="/search" element={<SearchPage />} />
           {/* 상세 페이지 */}
           <Route path="/insight" element={<InsightPage />} />
         </Routes>
