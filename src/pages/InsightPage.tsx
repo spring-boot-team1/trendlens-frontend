@@ -6,7 +6,6 @@ import {
   ArrowLeft, 
   TrendingUp, 
   Search, 
-  ExternalLink, 
   Sparkles, 
   Quote
 } from "lucide-react";
@@ -15,10 +14,14 @@ interface InsightResult {
   seqKeyword: number;
   keyword: string;
   category: string;
-  imgUrl?: string;     // 백엔드에서 받은 변수명
-  imageUrl?: string;   // 비상용
-  summary?: string;
-  stylingTip?: string;
+  imgUrl?: string | null;    
+  imageUrl?: string | null;   
+  summary?: string | null;
+  stylingTip?: string | null;
+  
+  // ✅ [추가] 백엔드 데이터와 연결할 필드
+  growthRate?: number; 
+  status?: string; // "up", "down", "stable"
 }
 
 export default function InsightPage() {
@@ -55,6 +58,26 @@ export default function InsightPage() {
   const mainInsight = results.length > 0 ? results[0] : null;
   const displayImg = mainInsight?.imgUrl || mainInsight?.imageUrl;
 
+  // ✅ 데이터 표시 헬퍼 로직
+  const getStatusText = (status?: string) => {
+    if (status === 'up') return '상승세';
+    if (status === 'down') return '하락세';
+    return '유지';
+  };
+
+  const getGrowthColor = (rate?: number) => {
+    if (!rate) return "text-gray-500";
+    if (rate > 0) return "text-red-600";
+    if (rate < 0) return "text-blue-600";
+    return "text-gray-500";
+  };
+
+  const formatGrowthRate = (rate?: number) => {
+    if (rate === undefined || rate === null) return "-";
+    // 양수면 앞에 + 붙이기
+    return rate > 0 ? `+${rate}%` : `${rate}%`;
+  };
+
   if (loading) return (
     <div className="flex h-screen items-center justify-center bg-white">
        <Loader2 className="w-8 h-8 animate-spin text-black" />
@@ -85,7 +108,6 @@ export default function InsightPage() {
             <span className="block text-[10px] font-bold tracking-[0.2em] text-red-600 mb-3 uppercase">
                 Weekly Insight
             </span>
-            {/* 제목 크기 적당히 줄임 (text-4xl) */}
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight">
                 {mainInsight?.keyword}
             </h1>
@@ -124,24 +146,29 @@ export default function InsightPage() {
           {/* [Right] Data */}
           <div className="lg:col-span-7 flex flex-col gap-10">
             
-            {/* 1. Metrics (Target 삭제됨) */}
+            {/* 1. Metrics (실제 데이터 연동됨) */}
             <div>
               <h2 className="text-xs font-bold tracking-widest border-b border-black pb-3 mb-6">KEY METRICS</h2>
-              {/* Target을 뺐으므로 2열 그리드로 변경 */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-gray-50 rounded-lg">
                     <div className="flex items-center gap-2 mb-2 text-gray-400">
                         <TrendingUp className="w-3 h-3" />
                         <span className="text-[9px] font-bold tracking-widest uppercase">Trend</span>
                     </div>
-                    <p className="text-base font-bold">상승세</p>
+                    {/* ✅ 상태값 연동 (상승세/하락세/유지) */}
+                    <p className="text-base font-bold">
+                      {getStatusText(mainInsight?.status)}
+                    </p>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg">
                     <div className="flex items-center gap-2 mb-2 text-gray-400">
                         <Search className="w-3 h-3" />
                         <span className="text-[9px] font-bold tracking-widest uppercase">Growth</span>
                     </div>
-                    <p className="text-base font-bold text-red-600">+25%</p>
+                    {/* ✅ 수치 및 색상 연동 (양수면 빨강, 음수면 파랑) */}
+                    <p className={`text-base font-bold ${getGrowthColor(mainInsight?.growthRate)}`}>
+                      {formatGrowthRate(mainInsight?.growthRate)}
+                    </p>
                 </div>
               </div>
             </div>
