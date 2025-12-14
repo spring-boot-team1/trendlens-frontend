@@ -1,133 +1,183 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { trendApi } from "@/lib/api";
-import type { InsightResult } from "@/types/trend";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Loader2, Sparkles, AlertCircle } from "lucide-react";
+import { 
+  Loader2, 
+  ArrowLeft, 
+  TrendingUp, 
+  Search, 
+  ExternalLink, 
+  Sparkles, 
+  Quote
+} from "lucide-react";
 
-// ✅ 함수 선언과 동시에 export default 적용 (import 에러 방지)
+interface InsightResult {
+  seqKeyword: number;
+  keyword: string;
+  category: string;
+  imgUrl?: string;     // 백엔드에서 받은 변수명
+  imageUrl?: string;   // 비상용
+  summary?: string;
+  stylingTip?: string;
+}
+
 export default function InsightPage() {
-  // 1. 주소창에서 'keyword'를 꺼냅니다.
   const [searchParams] = useSearchParams();
   const keyword = searchParams.get("keyword") || "";
+  const navigate = useNavigate();
 
-  // 2. 화면에 보여줄 데이터들을 기억할 공간(State)을 만듭니다.
   const [results, setResults] = useState<InsightResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // 3. 페이지가 켜지거나, 검색어(keyword)가 바뀌면 실행되는 함수
   useEffect(() => {
     if (!keyword) {
-      setLoading(false); // 키워드가 없으면 로딩 해제
-      return; 
+      setLoading(false);
+      return;
     }
-
     const fetchData = async () => {
       setLoading(true);
       setError("");
       try {
-        // 백엔드에게 "이 키워드로 찾아줘!" 라고 요청
         const data = await trendApi.searchInsight(keyword);
+        console.log("API Data:", data); 
         setResults(data);
       } catch (err) {
         console.error(err);
-        setError("데이터를 불러오는데 실패했습니다.");
+        setError("데이터 로딩 실패");
       } finally {
-        setLoading(false); // 로딩 끝
+        setLoading(false);
       }
     };
-
     fetchData();
   }, [keyword]);
 
-  // 4. 화면 그리기 시작!
+  const mainInsight = results.length > 0 ? results[0] : null;
+  const displayImg = mainInsight?.imgUrl || mainInsight?.imageUrl;
+
+  if (loading) return (
+    <div className="flex h-screen items-center justify-center bg-white">
+       <Loader2 className="w-8 h-8 animate-spin text-black" />
+    </div>
+  );
+
+  if (!loading && (!mainInsight || error)) return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white">
+      <p className="font-bold mb-4">데이터가 없습니다.</p>
+      <button onClick={() => navigate(-1)} className="border-b border-black text-xs font-bold pb-1">BACK</button>
+    </div>
+  );
+
   return (
-    <div className="container mx-auto py-10 px-4">
-      {/* 제목 영역 */}
-      <div className="mb-8 border-b pb-4">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          🔍 <span className="text-blue-600">"{keyword}"</span> 분석 리포트
-        </h1>
-        <p className="text-slate-500 mt-1">
-          Gemini AI가 분석한 트렌드 요약과 스타일링 팁입니다.
-        </p>
-      </div>
-
-      {/* 로딩 중일 때 보여줄 화면 */}
-      {loading && (
-        <div className="flex justify-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-          <span className="ml-2 text-slate-500">AI가 데이터를 분석 중입니다...</span>
+    <div className="min-h-screen bg-white text-black pb-20 font-sans">
+      <div className="mx-auto max-w-screen-xl px-5 md:px-8">
+        
+        {/* [Header] */}
+        <div className="pt-8 pb-6 mb-12 border-b border-black flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex-1">
+            <button 
+                onClick={() => navigate(-1)}
+                className="group flex items-center text-[10px] font-bold tracking-widest text-gray-400 hover:text-black mb-6 transition-colors uppercase"
+            >
+                <ArrowLeft className="w-3 h-3 mr-1 group-hover:-translate-x-1 transition-transform" />
+                Back
+            </button>
+            <span className="block text-[10px] font-bold tracking-[0.2em] text-red-600 mb-3 uppercase">
+                Weekly Insight
+            </span>
+            {/* 제목 크기 적당히 줄임 (text-4xl) */}
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight">
+                {mainInsight?.keyword}
+            </h1>
+          </div>
+          <div className="text-right hidden md:block pb-1">
+            <span className="text-[10px] font-bold tracking-widest text-gray-400 block mb-1">CATEGORY</span>
+            <span className="text-lg font-bold uppercase">{mainInsight?.category}</span>
+          </div>
         </div>
-      )}
 
-      {/* 에러 났을 때 보여줄 화면 */}
-      {!loading && error && (
-        <div className="p-4 bg-red-50 text-red-600 rounded-lg flex items-center gap-2">
-          <AlertCircle className="h-5 w-5" />
-          {error}
-        </div>
-      )}
-
-      {/* 결과가 없을 때 */}
-      {!loading && !error && results.length === 0 && (
-        <div className="text-center py-20 text-slate-500 bg-slate-50 rounded-lg">
-          검색 결과가 없습니다. 다른 검색어를 입력해보세요.
-        </div>
-      )}
-
-      {/* ★ 진짜 결과 리스트 보여주는 곳 ★ */}
-      <div className="space-y-6">
-        {results.map((item) => (
-          <Card key={item.seqKeyword} className="overflow-hidden border-l-4 border-l-blue-500 shadow-sm hover:shadow-md transition-shadow">
-            <CardHeader className="bg-slate-50/50 pb-3">
-              <div className="flex justify-between items-start">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Badge variant="outline" className="text-xs bg-white">
-                      {item.category}
-                    </Badge>
-                    {/* 분석 여부에 따라 다른 뱃지 보여주기 */}
-                    {item.hasInsight ? (
-                      <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-0">
-                        <Sparkles className="w-3 h-3 mr-1" /> AI 분석완료
-                      </Badge>
-                    ) : (
-                      <Badge variant="secondary">분석 대기중</Badge>
-                    )}
-                  </div>
-                  <CardTitle className="text-xl">{item.keyword}</CardTitle>
+        {/* [Content] */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          
+          {/* [Left] Image */}
+          <div className="lg:col-span-5">
+            <div className="sticky top-10">
+              <div className="relative w-full aspect-[3/4] bg-gray-50 overflow-hidden border border-gray-100">
+                {displayImg ? (
+                  <img 
+                    src={displayImg} 
+                    alt={mainInsight?.keyword} 
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                    onError={(e) => e.currentTarget.src = 'https://via.placeholder.com/400x533?text=NO+IMAGE'}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-300 text-xs tracking-widest">NO VISUAL</div>
+                )}
+                <div className="absolute bottom-0 left-0 bg-white/80 px-4 py-2 text-[9px] font-bold tracking-widest border-tr border-gray-100">
+                  SOURCE : MUSINSA
                 </div>
               </div>
-            </CardHeader>
+            </div>
+          </div>
 
-            <CardContent className="pt-4 space-y-4">
-              {/* AI 요약 내용 */}
-              <div>
-                <h4 className="font-semibold text-sm text-slate-900 mb-1 flex items-center gap-2">
-                  📊 트렌드 요약
-                </h4>
-                <p className="text-sm text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-md">
-                  {item.summary}
+          {/* [Right] Data */}
+          <div className="lg:col-span-7 flex flex-col gap-10">
+            
+            {/* 1. Metrics (Target 삭제됨) */}
+            <div>
+              <h2 className="text-xs font-bold tracking-widest border-b border-black pb-3 mb-6">KEY METRICS</h2>
+              {/* Target을 뺐으므로 2열 그리드로 변경 */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2 text-gray-400">
+                        <TrendingUp className="w-3 h-3" />
+                        <span className="text-[9px] font-bold tracking-widest uppercase">Trend</span>
+                    </div>
+                    <p className="text-base font-bold">상승세</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2 text-gray-400">
+                        <Search className="w-3 h-3" />
+                        <span className="text-[9px] font-bold tracking-widest uppercase">Growth</span>
+                    </div>
+                    <p className="text-base font-bold text-red-600">+25%</p>
+                </div>
+              </div>
+            </div>
+
+            {/* 2. AI Insight */}
+            <div className="relative pl-6 border-l-2 border-blue-600 py-2">
+                <h2 className="text-xs font-bold tracking-widest text-blue-600 mb-3 flex items-center gap-2">
+                    <Sparkles className="w-3 h-3" /> AI ANALYST SAYS
+                </h2>
+                <p className="text-lg leading-relaxed font-medium text-gray-900 break-keep">
+                  "{mainInsight?.summary || '데이터 분석 대기 중입니다.'}"
                 </p>
-              </div>
+            </div>
 
-              {/* 스타일링 팁 (데이터가 있을 때만 보여줌) */}
-              {item.stylingTip && (
-                <div>
-                  <h4 className="font-semibold text-sm text-slate-900 mb-1 flex items-center gap-2">
-                    👗 스타일링 팁
-                  </h4>
-                  <p className="text-sm text-blue-700 bg-blue-50 p-3 rounded-md border border-blue-100">
-                    💡 {item.stylingTip}
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+            {/* 3. Styling Tip */}
+            {mainInsight?.stylingTip && (
+              <div className="bg-gray-900 text-white p-6 rounded-xl shadow-lg">
+                 <div className="flex items-center gap-2 mb-3 text-gray-400">
+                    <Quote className="w-4 h-4" />
+                    <span className="text-[10px] font-bold tracking-widest">STYLING TIP</span>
+                 </div>
+                 <p className="text-sm leading-7 font-medium text-gray-100">
+                    {mainInsight.stylingTip}
+                 </p>
+              </div>
+            )}
+            
+            {/* 4. Tags */}
+            <div className="flex flex-wrap gap-2 pt-6 border-t border-gray-100">
+                {['Trend', 'Daily', 'OOTD', 'Style'].map(tag => (
+                   <span key={tag} className="px-3 py-1 bg-white border border-gray-200 rounded-full text-[10px] font-bold text-gray-500">#{tag}</span>
+                ))}
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
   );
