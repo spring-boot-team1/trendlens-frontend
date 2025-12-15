@@ -1,39 +1,40 @@
 # 프로젝트 개발 환경 초기 설정 (Frontend - Vite + Tailwind + ShadCN)
 
-## 1. 루트 폴더에서 터미널 연다
-```
-cd your-project-root
-```
 
-## 2. Vite 프로젝트 생성
-```
-npm create vite@latest
-```
-
-## 3. TailwindCSS 설치
+## 1. TailwindCSS 설치
 ```
 npm install tailwindcss @tailwindcss/vite
 ```
 
-## 4. Node 타입 설치
+## 2. Node 타입 설치
 ```
 npm install -D @types/node
 ```
 
-## 5. ShadCN UI 초기화
+## 3. ShadCN UI 초기화
 ```
 npx shadcn@latest init
 ```
 
-## 5-2. react-router-dom 설치
+## 4. react-router-dom 설치
 ```
 npm install react-router-dom
 ```
 
-## 6. .env 파일 추가
+## 5. axios 설치
+```
+npm install axios
+```
+
+## 6. three.js 설치
+```
+npm install three
+```
+
+## 7. .env 파일 추가
 디스코드에서 공유받은 .env 파일을 루트 폴더에 추가하세요.
 
-## 7. API 호출 방법(/예시)
+## 8. API 호출 방법(/예시)
 ```tsx
 const trend = import.meta.env.API_CONTEXT_ROOT;
 
@@ -46,6 +47,18 @@ const response = await fetch(`${trend}/api/v1/login`, {
 });
 ```
 
+## 8-1. API 호출방법(/axios)
+```tsx
+const res = await axios.post<T>(
+        `${trend}/api/v1/analyze/body`
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${accessToken}`,  // JWT 쓰면 여기 추가
+          },
+        }
+      );
+```
 ---
 
 # 📖 React Router 및 페이지 관리 가이드 (초보 팀원 필독!)
