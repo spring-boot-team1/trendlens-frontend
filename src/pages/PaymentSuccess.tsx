@@ -31,18 +31,19 @@ function PaymentSuccess() {
       return;
     }
 
-    const trend = import.meta.env.API_BASE_URL; // 백엔드 기본 URL
-
     (async () => {
       try {
-        const response = await axios.post<ConfirmResponse>(
-          `${trend}/api/v1/payments/confirm`,
-          {
-            paymentKey,
-            orderId,
-            amount: Number(amount),
-          }
-        );
+        const BASE = import.meta.env.VITE_API_BASE_URL; // 백엔드 기본 URL
+
+        const url = `${BASE}/trend/api/v1/payments/confirm`;
+        console.log("BASE =", BASE);
+        console.log("CONFIRM URL =", url);
+
+        const response = await axios.post(url, {
+          paymentKey,
+          orderId,
+          amount: Number(amount),
+        });
         setResult(response.data);
       } catch (err: any) {
         console.error(err);

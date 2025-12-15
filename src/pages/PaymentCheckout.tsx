@@ -1,6 +1,6 @@
 // src/pages/PaymentCheckout.tsx
 import { useEffect, useRef, useState } from "react";
-// import axios from "axios";
+import axios from "axios";
 import {
   loadPaymentWidget,
   ANONYMOUS,
@@ -21,7 +21,7 @@ function PaymentCheckout() {
     const paymentWidgetRef = useRef<PaymentWidgetInstance | null>(null);
 
     //테스트용 금액 (단위: 원)
-    const [amount] = useState<number>(200);
+    const [amount] = useState<number>(2900);
 
     // 화면이 한 번 렌더링된 후 Toss 위젯 초기화
     useEffect(() => {
@@ -61,14 +61,28 @@ function PaymentCheckout() {
     const orderName = "TrendLens 구독 1개월";
 
     try {
+      // 1️⃣ 결제 요청 기록 (PENDING)
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/trend/api/v1/payments/record`,
+        {
+          seqAccount: 1,          // TODO: 실제 로그인 사용자 ID로 교체
+          orderId,
+          amount,
+          seqSubscriptionPlan: 1
+        }
+      );
+
+      // 2️⃣ Toss 결제 시작 (같은 orderId 사용)
       await paymentWidgetRef.current.requestPayment({
         orderId,
         orderName,
         successUrl: `${window.location.origin}/payments/success`,
         failUrl: `${window.location.origin}/payments/fail`,
       });
+
     } catch (err) {
       console.error("결제 요청 실패:", err);
+      alert("결제 요청 중 오류가 발생했습니다.");
     }
   };
 
