@@ -76,7 +76,7 @@ function PaymentSuccess() {
           <p className="text-slate-700 mb-6">{error}</p>
           <button
             className="w-full h-10 rounded-lg bg-slate-800 text-white font-medium hover:bg-slate-900"
-            onClick={() => navigate("/payment/checkout")}
+            onClick={() => navigate("/payments/checkout")}
           >
             다시 결제 시도하기
           </button>
