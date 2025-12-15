@@ -4,13 +4,13 @@ import type { TrendItem, InsightResult } from "@/types/trend";
 export const trendApi = {
   // 1. 게스트용 Top 5 랭킹 조회
   getGuestRanking: async (): Promise<TrendItem[]> => {
-    const response = await axiosInstance.get<TrendItem[]>("/rank/guest");
+    const response = await axiosInstance.get<TrendItem[]>("/api/trends/rank/guest");
     return response.data;
   },
 
   // 2. 키워드 검색 & Insight 조회
   searchInsight: async (keyword: string): Promise<InsightResult[]> => {
-    const response = await axiosInstance.get<InsightResult[]>("/insight", {
+    const response = await axiosInstance.get<InsightResult[]>("/api/trends/insight", {
       params: { keyword },
     });
     return response.data;
