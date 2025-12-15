@@ -78,11 +78,11 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
-    }
-  };
+  // const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     setFile(e.target.files[0]);
+  //   }
+  // };
 
   const handleSignup = async () => {
     if (!validateSignup()) return;
