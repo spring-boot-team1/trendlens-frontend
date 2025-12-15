@@ -64,8 +64,8 @@ function PaymentCheckout() {
       await paymentWidgetRef.current.requestPayment({
         orderId,
         orderName,
-        successUrl: `${window.location.origin}/payment/success`,
-        failUrl: `${window.location.origin}/payment/fail`,
+        successUrl: `${window.location.origin}/payments/success`,
+        failUrl: `${window.location.origin}/payments/fail`,
       });
     } catch (err) {
       console.error("결제 요청 실패:", err);
