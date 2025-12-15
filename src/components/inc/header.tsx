@@ -9,9 +9,20 @@ import {
 import { Link } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import Logo from "@/assets/logo.png";
+import { useAuthStore } from "@/store/authStore";
+import { logout } from "@/api/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { accessToken } = useAuthStore();
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    const success = await logout();
+    if (success) {
+      navigate("/login");
+    }
+  };
 
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -94,8 +105,8 @@ export default function Header() {
                   <Link to="/content/magazine" className="hover:text-gray-600">
                     매거진
                   </Link>
-                  <Link to="/content/news" className="hover:text-gray-600">
-                    패션 뉴스
+                  <Link to="/bodyanalyze" className="hover:text-gray-600">
+                    AI체형분석
                   </Link>
                 </div>
               </NavigationMenuContent>
@@ -105,8 +116,37 @@ export default function Header() {
 
         {/* 데스크톱 로그인 영역 */}
         <div className="hidden md:flex items-center gap-4">
-          <button className="text-sm hover:text-gray-600">로그인</button>
-          <button className="text-sm hover:text-gray-600">회원가입</button>
+          {accessToken ? (
+            <>
+              <button
+                className="text-sm hover:text-gray-600"
+                onClick={() => navigate("/mypage")}
+              >
+                마이페이지
+              </button>
+              <button
+                className="text-sm hover:text-gray-600"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="text-sm hover:text-gray-600"
+                onClick={() => navigate("/login")}
+              >
+                로그인
+              </button>
+              <button
+                className="text-sm hover:text-gray-600"
+                onClick={() => navigate("/register")}
+              >
+                회원가입
+              </button>
+            </>
+          )}
         </div>
 
         {/* 모바일 햄버거 버튼 (md 미만) */}
@@ -237,11 +277,11 @@ export default function Header() {
                   매거진
                 </Link>
                 <Link
-                  to="/content/news"
+                  to="/bodyanalyze"
                   onClick={closeMobileMenu}
                   className="hover:text-gray-600"
                 >
-                  패션 뉴스
+                  AI체형분석
                 </Link>
               </div>
             </div>
@@ -249,13 +289,56 @@ export default function Header() {
 
           {/* 모바일 로그인 영역 */}
           <div className="mt-auto flex flex-col gap-2">
-            <button className="text-sm text-left hover:text-gray-600">
-              로그인
-            </button>
-            <button className="text-sm text-left hover:text-gray-600">
-              회원가입
-            </button>
+            {accessToken ? (
+              <>
+                <button
+                  className="text-sm text-left hover:text-gray-600"
+                  onClick={() => {
+                    navigate("/mypage");
+                    closeMobileMenu();
+                  }}
+                >
+                  마이페이지
+                </button>
+
+                <button
+                  className="text-sm text-left hover:text-gray-600"
+                  onClick={async () => {
+                    await handleLogout();
+                    closeMobileMenu();
+                  }}
+                >
+                  로그아웃
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className="text-sm text-left hover:text-gray-600"
+                  onClick={() => {
+                    navigate("/login");
+                    closeMobileMenu();
+                  }}
+                >
+                  로그인
+                </button>
+
+                <button
+                  className="text-sm text-left hover:text-gray-600"
+                  onClick={() => {
+                    navigate("/register");
+                    closeMobileMenu();
+                  }}
+                >
+                  회원가입
+                </button>
+              </>
+            )}
           </div>
+
+
+
+
         </div>
       </div>
     </header>
