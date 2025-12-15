@@ -20,7 +20,6 @@ function App() {
         <Route path="/login" element={< Login/>} />
         <Route path="/register" element={<Register />} />
       </Routes>
-    </>
       <main className="pt-15"> 
         <Routes>
           {/* 메인 페이지 */}
