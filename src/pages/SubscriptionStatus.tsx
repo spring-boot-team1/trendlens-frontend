@@ -17,11 +17,11 @@ export default function SubscriptionStatus() {
   const seqAccount = 1;
 
   useEffect(() => {
-    const trend = import.meta.env.VITE_API_BASE_URL;
+    const BASE = import.meta.env.VITE_API_BASE_URL;
 
     axios
       .get<SubscriptionStatusResponse>(
-        `${trend}/trend/api/v1/subscriptions/status`,
+        `${BASE}/trend/api/v1/subscriptions/status`,
         { params: { seqAccount } }
       )
       .then(res => setData(res.data))
