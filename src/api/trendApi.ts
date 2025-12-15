@@ -1,3 +1,4 @@
+[/* trendApi */]
 import axiosInstance from "@/api/axiosInstance"; 
 import type { TrendItem, InsightResult } from "@/types/trend";
 
@@ -18,7 +19,7 @@ export const trendApi = {
 
   // 3. [회원용] 내 관심 키워드 랭킹 조회 (하트 누른 것들의 랭킹)
   getMyRanking: async (seqAccount: number): Promise<TrendItem[]> => {
-    const response = await axiosInstance.get<TrendItem[]>("/api/trends/rank/my", {
+    const response = await axiosInstance.get<TrendItem[]>("/api/v1/interests/my", {
       params: { seqAccount }
     });
     return response.data;
