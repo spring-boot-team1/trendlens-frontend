@@ -102,8 +102,8 @@ export default function Header() {
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div className="grid grid-cols-1 gap-2 p-4 w-40">
-                  <Link to="/content/magazine" className="hover:text-gray-600">
-                    매거진
+                  <Link to="/payments/checkout" className="hover:text-gray-600">
+                    구독 결제
                   </Link>
                   <Link to="/bodyanalyze" className="hover:text-gray-600">
                     AI체형분석
@@ -116,12 +116,37 @@ export default function Header() {
 
         {/* 데스크톱 로그인 영역 */}
         <div className="hidden md:flex items-center gap-4">
-          <button className="text-sm hover:text-gray-600">
-            <Link to="/login" className="hover:text-gray-600">
-                    로그인
-            </Link>
-          </button>
-          <button className="text-sm hover:text-gray-600">회원가입</button>
+          {accessToken ? (
+            <>
+              <button
+                className="text-sm hover:text-gray-600"
+                onClick={() => navigate("/mypage")}
+              >
+                마이페이지
+              </button>
+              <button
+                className="text-sm hover:text-gray-600"
+                onClick={handleLogout}
+              >
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="text-sm hover:text-gray-600"
+                onClick={() => navigate("/login")}
+              >
+                로그인
+              </button>
+              <button
+                className="text-sm hover:text-gray-600"
+                onClick={() => navigate("/register")}
+              >
+                회원가입
+              </button>
+            </>
+          )}
         </div>
 
         {/* 모바일 햄버거 버튼 (md 미만) */}
@@ -245,11 +270,11 @@ export default function Header() {
               <div className="font-bold mb-2">Content</div>
               <div className="flex flex-col gap-1">
                 <Link
-                  to="/content/magazine"
+                  to="/payments/checkout"
                   onClick={closeMobileMenu}
                   className="hover:text-gray-600"
                 >
-                  매거진
+                  구독 결제
                 </Link>
                 <Link
                   to="/bodyanalyze"
