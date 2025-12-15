@@ -116,37 +116,12 @@ export default function Header() {
 
         {/* 데스크톱 로그인 영역 */}
         <div className="hidden md:flex items-center gap-4">
-          {accessToken ? (
-            <>
-              <button
-                className="text-sm hover:text-gray-600"
-                onClick={() => navigate("/mypage")}
-              >
-                마이페이지
-              </button>
-              <button
-                className="text-sm hover:text-gray-600"
-                onClick={handleLogout}
-              >
-                로그아웃
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                className="text-sm hover:text-gray-600"
-                onClick={() => navigate("/login")}
-              >
-                로그인
-              </button>
-              <button
-                className="text-sm hover:text-gray-600"
-                onClick={() => navigate("/register")}
-              >
-                회원가입
-              </button>
-            </>
-          )}
+          <button className="text-sm hover:text-gray-600">
+            <Link to="/login" className="hover:text-gray-600">
+                    로그인
+            </Link>
+          </button>
+          <button className="text-sm hover:text-gray-600">회원가입</button>
         </div>
 
         {/* 모바일 햄버거 버튼 (md 미만) */}
