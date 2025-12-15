@@ -111,6 +111,20 @@ export default function Header() {
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
+
+            <NavigationMenuItem>
+    <NavigationMenuTrigger className="text-lg hover:text-gray-600">
+      Subscription
+    </NavigationMenuTrigger>
+    <NavigationMenuContent>
+      <div className="grid grid-cols-1 gap-2 p-4 w-40">
+        <Link to="/payments/checkout" className="hover:text-gray-600">
+          구독 결제
+        </Link>
+      </div>
+    </NavigationMenuContent>
+  </NavigationMenuItem>
+            
           </NavigationMenuList>
         </NavigationMenu>
 
