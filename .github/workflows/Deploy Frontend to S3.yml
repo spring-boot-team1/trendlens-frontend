@@ -35,7 +35,7 @@ jobs:
       # S3 업로드
       - name: Upload to S3 (frontend/)
         run: |
-          aws s3 sync build/ s3://${{ secrets.AWS_BUCKET }}/frontend/ \
+          aws s3 sync dist/ s3://${{ secrets.AWS_BUCKET }}/frontend/ \
             --delete \
             --cache-control "max-age=0,no-cache,no-store,must-revalidate"
 
