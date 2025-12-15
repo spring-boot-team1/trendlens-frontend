@@ -91,8 +91,8 @@ export default function Header() {
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div className="grid grid-cols-1 gap-2 p-4 w-40">
-                  <Link to="/content/magazine" className="hover:text-gray-600">
-                    매거진
+                  <Link to="/payments/checkout" className="hover:text-gray-600">
+                    구독 결제
                   </Link>
                   <Link to="/content/news" className="hover:text-gray-600">
                     패션 뉴스
@@ -100,20 +100,6 @@ export default function Header() {
                 </div>
               </NavigationMenuContent>
             </NavigationMenuItem>
-
-            <NavigationMenuItem>
-    <NavigationMenuTrigger className="text-lg hover:text-gray-600">
-      Subscription
-    </NavigationMenuTrigger>
-    <NavigationMenuContent>
-      <div className="grid grid-cols-1 gap-2 p-4 w-40">
-        <Link to="/payments/checkout" className="hover:text-gray-600">
-          구독 결제
-        </Link>
-      </div>
-    </NavigationMenuContent>
-  </NavigationMenuItem>
-            
           </NavigationMenuList>
         </NavigationMenu>
 
@@ -244,11 +230,11 @@ export default function Header() {
               <div className="font-bold mb-2">Content</div>
               <div className="flex flex-col gap-1">
                 <Link
-                  to="/content/magazine"
+                  to="/payments/checkout"
                   onClick={closeMobileMenu}
                   className="hover:text-gray-600"
                 >
-                  매거진
+                  구독 결제
                 </Link>
                 <Link
                   to="/content/news"
