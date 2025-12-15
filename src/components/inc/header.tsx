@@ -102,8 +102,8 @@ export default function Header() {
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div className="grid grid-cols-1 gap-2 p-4 w-40">
-                  <Link to="/content/magazine" className="hover:text-gray-600">
-                    매거진
+                  <Link to="/payments/checkout" className="hover:text-gray-600">
+                    구독 결제
                   </Link>
                   <Link to="/bodyanalyze" className="hover:text-gray-600">
                     AI체형분석
@@ -270,11 +270,11 @@ export default function Header() {
               <div className="font-bold mb-2">Content</div>
               <div className="flex flex-col gap-1">
                 <Link
-                  to="/content/magazine"
+                  to="/payments/checkout"
                   onClick={closeMobileMenu}
                   className="hover:text-gray-600"
                 >
-                  매거진
+                  구독 결제
                 </Link>
                 <Link
                   to="/bodyanalyze"
