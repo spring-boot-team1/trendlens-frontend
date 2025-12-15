@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Input } from "@/components/ui/input";
@@ -27,7 +27,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   /* ===============================
-     🔥 body 배경 제어 (핵심)
+     body 배경 제어
   =============================== */
   useEffect(() => {
     const originalBg = document.body.style.backgroundColor;
@@ -78,11 +78,11 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files.length > 0) {
-  //     setFile(e.target.files[0]);
-  //   }
-  // };
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
+  };
 
   const handleSignup = async () => {
     if (!validateSignup()) return;
@@ -118,7 +118,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-100 p-4 overflow-y-auto">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader>
           <CardTitle className="text-center text-xl font-bold">
@@ -250,6 +250,17 @@ const Register = () => {
               {errors.birthday && (
                 <p className="text-sm text-red-500">{errors.birthday}</p>
               )}
+            </div>
+
+            {/* Profile Image */}
+            <div className="space-y-1">
+              <Label htmlFor="profile-image">프로필 이미지</Label>
+              <Input
+                id="profile-image"
+                type="file"
+                accept="image/*"
+                onChange={onFileChange}
+              />
             </div>
 
             {/* Submit */}
