@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { trendApi } from "@/lib/api";
+import { trendApi } from "@/api/trendApi";
 import { 
   Loader2, 
   ArrowLeft, 
