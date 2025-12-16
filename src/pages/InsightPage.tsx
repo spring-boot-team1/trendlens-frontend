@@ -1,13 +1,16 @@
+{/* insight.tsx */}
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { trendApi } from "@/api/trendApi";
+import { useAuthStore } from "@/store/authStore"; // ✅ Auth Store import
 import { 
   Loader2, 
   ArrowLeft, 
   TrendingUp, 
   Search, 
   Sparkles, 
-  Quote
+  Quote,
+  Heart // ✅ 하트 아이콘
 } from "lucide-react";
 
 interface InsightResult {
@@ -18,10 +21,8 @@ interface InsightResult {
   imageUrl?: string | null;   
   summary?: string | null;
   stylingTip?: string | null;
-  
-  // ✅ [추가] 백엔드 데이터와 연결할 필드
   growthRate?: number; 
-  status?: string; // "up", "down", "stable"
+  status?: string; 
 }
 
 export default function InsightPage() {
@@ -33,6 +34,13 @@ export default function InsightPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // ✅ [수정] useAuthStore 구조에 맞게 seqAccount 직접 추출
+  const { accessToken, seqAccount } = useAuthStore();
+  const isLoggedIn = !!accessToken; 
+  
+  const [isLiked, setIsLiked] = useState(false);
+
+  // 1. 데이터 로드 및 하트 상태 확인
   useEffect(() => {
     if (!keyword) {
       setLoading(false);
@@ -42,9 +50,18 @@ export default function InsightPage() {
       setLoading(true);
       setError("");
       try {
+        // 1. 인사이트 데이터 조회
         const data = await trendApi.searchInsight(keyword);
         console.log("API Data:", data); 
         setResults(data);
+
+        // ✅ 2. 회원이고 seqAccount가 있다면: 이미 하트를 눌렀는지 확인
+        if (isLoggedIn && seqAccount && data.length > 0) {
+           const targetSeq = data[0].seqKeyword;
+           const liked = await trendApi.checkIsLiked(seqAccount, targetSeq);
+           setIsLiked(liked);
+        }
+
       } catch (err) {
         console.error(err);
         setError("데이터 로딩 실패");
@@ -53,12 +70,28 @@ export default function InsightPage() {
       }
     };
     fetchData();
-  }, [keyword]);
+  }, [keyword, isLoggedIn, seqAccount]); // 의존성 배열
+
+  // ✅ 하트 토글 핸들러
+  const handleLikeToggle = async () => {
+    if (!results.length || !isLoggedIn || !seqAccount) return;
+    const targetSeq = results[0].seqKeyword;
+
+    try {
+      // API 호출 (seqAccount, seqKeyword 전달)
+      await trendApi.toggleInterest(seqAccount, targetSeq);
+      // UI 즉시 반영 (낙관적 업데이트)
+      setIsLiked(!isLiked);
+    } catch (e) {
+      console.error("하트 토글 실패", e);
+      alert("오류가 발생했습니다.");
+    }
+  };
 
   const mainInsight = results.length > 0 ? results[0] : null;
   const displayImg = mainInsight?.imgUrl || mainInsight?.imageUrl;
 
-  // ✅ 데이터 표시 헬퍼 로직
+  // 헬퍼 함수들
   const getStatusText = (status?: string) => {
     if (status === 'up') return '상승세';
     if (status === 'down') return '하락세';
@@ -74,7 +107,6 @@ export default function InsightPage() {
 
   const formatGrowthRate = (rate?: number) => {
     if (rate === undefined || rate === null) return "-";
-    // 양수면 앞에 + 붙이기
     return rate > 0 ? `+${rate}%` : `${rate}%`;
   };
 
@@ -108,9 +140,30 @@ export default function InsightPage() {
             <span className="block text-[10px] font-bold tracking-[0.2em] text-red-600 mb-3 uppercase">
                 Weekly Insight
             </span>
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight">
-                {mainInsight?.keyword}
-            </h1>
+            
+            {/* ✅ 제목 영역: 로그인 시 하트 버튼 표시 */}
+            <div className="flex items-center gap-4">
+                <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-black leading-tight">
+                    {mainInsight?.keyword}
+                </h1>
+                
+                {isLoggedIn && (
+                  <button 
+                    onClick={handleLikeToggle}
+                    className="group p-2 rounded-full hover:bg-red-50 transition-all active:scale-95"
+                    title={isLiked ? "관심 해제" : "관심 등록"}
+                  >
+                    <Heart 
+                      className={`w-8 h-8 transition-colors duration-300 ${
+                         isLiked 
+                           ? "fill-red-600 text-red-600"  // 채워진 빨간 하트
+                           : "text-gray-300 group-hover:text-red-400" // 빈 하트
+                      }`} 
+                    />
+                  </button>
+                )}
+            </div>
+
           </div>
           <div className="text-right hidden md:block pb-1">
             <span className="text-[10px] font-bold tracking-widest text-gray-400 block mb-1">CATEGORY</span>
@@ -146,7 +199,7 @@ export default function InsightPage() {
           {/* [Right] Data */}
           <div className="lg:col-span-7 flex flex-col gap-10">
             
-            {/* 1. Metrics (실제 데이터 연동됨) */}
+            {/* 1. Metrics */}
             <div>
               <h2 className="text-xs font-bold tracking-widest border-b border-black pb-3 mb-6">KEY METRICS</h2>
               <div className="grid grid-cols-2 gap-4">
@@ -155,7 +208,6 @@ export default function InsightPage() {
                         <TrendingUp className="w-3 h-3" />
                         <span className="text-[9px] font-bold tracking-widest uppercase">Trend</span>
                     </div>
-                    {/* ✅ 상태값 연동 (상승세/하락세/유지) */}
                     <p className="text-base font-bold">
                       {getStatusText(mainInsight?.status)}
                     </p>
@@ -165,7 +217,6 @@ export default function InsightPage() {
                         <Search className="w-3 h-3" />
                         <span className="text-[9px] font-bold tracking-widest uppercase">Growth</span>
                     </div>
-                    {/* ✅ 수치 및 색상 연동 (양수면 빨강, 음수면 파랑) */}
                     <p className={`text-base font-bold ${getGrowthColor(mainInsight?.growthRate)}`}>
                       {formatGrowthRate(mainInsight?.growthRate)}
                     </p>
