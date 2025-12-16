@@ -85,6 +85,35 @@ const MyPage = () => {
           <Button className="w-full">
             프로필 수정
           </Button>
+
+          {/* 🔔 구독 상태 (캡처용 고정 UI) */}
+          <div className="mt-6 rounded-xl border bg-slate-50 p-4 space-y-2">
+            <p className="text-sm font-semibold text-slate-700">
+              구독 상태
+            </p>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-500">플랜</span>
+              <span>TrendLens 구독</span>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-500">상태</span>
+              <span className="font-medium text-green-600">
+                ACTIVE
+              </span>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-500">시작일</span>
+              <span>2025-12-16</span>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-500">다음 결제일</span>
+              <span>2026-01-16</span>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
