@@ -35,7 +35,7 @@ function PaymentSuccess() {
       try {
         const BASE = import.meta.env.VITE_API_BASE_URL; // 백엔드 기본 URL
 
-        const url = `${BASE}/trend/api/v1/payments/confirm`;
+        const url = `${BASE}/api/v1/payments/confirm`;
         console.log("BASE =", BASE);
         console.log("CONFIRM URL =", url);
 
@@ -124,9 +124,9 @@ function PaymentSuccess() {
         </button>
         <button
           className="w-full h-10 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-50"
-          onClick={() => navigate("/mypage/subscription")}
+          onClick={() => navigate("/subscriptionstatus")}
         >
-          내 구독 정보 보기 (예정)
+          내 구독 정보 보기
         </button>
       </div>
     </div>

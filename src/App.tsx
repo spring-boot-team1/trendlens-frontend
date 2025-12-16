@@ -20,7 +20,7 @@ function App() {
         <Route path="/payments/checkout" element={<PaymentCheckout />} />
         <Route path="/payments/success" element={<PaymentSuccess />} />
         <Route path="/payments/fail" element={<PaymentFail />} />
-        <Route path="/payments/subscriptionstatus" element={<SubscriptionStatus />} />
+        <Route path="/subscriptionstatus" element={<SubscriptionStatus />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register />} />
         <Route path="/mypage" element={<Mypage />} />

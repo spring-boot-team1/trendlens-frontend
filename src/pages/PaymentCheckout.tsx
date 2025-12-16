@@ -6,6 +6,8 @@ import {
   ANONYMOUS,
 } from "@tosspayments/payment-widget-sdk";
 
+import { useAuthStore } from "@/store/authStore";
+
 // 타입 전용 import (TS 오류 해결)
 import type { PaymentWidgetInstance } from "@tosspayments/payment-widget-sdk";
 
@@ -17,6 +19,13 @@ const clientKey = import.meta.env.VITE_TOSS_CLIENT_KEY as string;
 const customerKey = ANONYMOUS;
 
 function PaymentCheckout() {
+
+  const seqAccount = useAuthStore((state) => state.seqAccount);
+
+  if (!seqAccount) {
+    return <div>로그인이 필요합니다.</div>;
+  }
+  
     // Toss 결제위젯 인스턴스를 저장해 두기 위한 ref
     const paymentWidgetRef = useRef<PaymentWidgetInstance | null>(null);
 
@@ -63,9 +72,9 @@ function PaymentCheckout() {
     try {
       // 1️⃣ 결제 요청 기록 (PENDING)
       await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/trend/api/v1/payments/record`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/payments/record`,
         {
-          seqAccount: 1,          // TODO: 실제 로그인 사용자 ID로 교체
+          seqAccount,  // 실제 로그인 사용자seq
           orderId,
           amount,
           seqSubscriptionPlan: 1
