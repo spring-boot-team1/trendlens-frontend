@@ -1,0 +1,54 @@
+name: Deploy Frontend to S3
+
+on:
+  push:
+    branches: ["main"]     # main에 merge/push 될 때 자동 배포
+  workflow_dispatch:        # 수동 실행도 가능
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm ci
+
+      # 🔴 여기 중요: Vite 환경변수 주입
+      - name: Build React App
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          VITE_TOSS_CLIENT_KEY: ${{ secrets.VITE_TOSS_CLIENT_KEY }}
+        run: npm run build
+
+      # AWS 인증 정보 설정
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # S3 업로드
+      - name: Upload to S3 (frontend/)
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.AWS_BUCKET }}/frontend/ \
+            --delete \
+            --cache-control "max-age=0,no-cache,no-store,must-revalidate"
+
+      # CloudFront 캐시 무효화
+      - name: Create CloudFront Invalidation
+        if: env.CLOUDFRONT_DISTRIBUTION_ID != ''
+        env:
+          CLOUDFRONT_DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id $CLOUDFRONT_DISTRIBUTION_ID \
+            --paths "/*"
