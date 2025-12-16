@@ -1,6 +1,6 @@
 // src/pages/PaymentCheckout.tsx
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import axiosInstance from "@/api/axiosInstance";
 import {
   loadPaymentWidget,
   ANONYMOUS,
@@ -61,39 +61,36 @@ function PaymentCheckout() {
   }, [amount]);
 
   const handlePayment = async () => {
-    if (!paymentWidgetRef.current) {
-      alert("결제위젯이 준비되지 않았습니다.");
-      return;
-    }
+  if (!paymentWidgetRef.current) {
+    alert("결제위젯이 준비되지 않았습니다.");
+    return;
+  }
 
-    const orderId = `TREND-${Date.now()}`;
-    const orderName = "TrendLens 구독 1개월";
+  const orderId = `TREND-${Date.now()}`;
+  const orderName = "TrendLens 구독 1개월";
 
-    try {
-      // 1️⃣ 결제 요청 기록 (PENDING)
-      await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/v1/payments/record`,
-        {
-          seqAccount,  // 실제 로그인 사용자seq
-          orderId,
-          amount,
-          seqSubscriptionPlan: 1
-        }
-      );
+  try {
+    // 1️⃣ 결제 요청 기록 (PENDING)
+    await axiosInstance.post("/api/v1/payments/record", {
+      seqAccount,                 // 로그인 사용자 seq
+      orderId,
+      amount,
+      seqSubscriptionPlan: 1,
+    });
 
-      // 2️⃣ Toss 결제 시작 (같은 orderId 사용)
-      await paymentWidgetRef.current.requestPayment({
-        orderId,
-        orderName,
-        successUrl: `${window.location.origin}/payments/success`,
-        failUrl: `${window.location.origin}/payments/fail`,
-      });
+    // 2️⃣ Toss 결제 시작 (같은 orderId 사용)
+    await paymentWidgetRef.current.requestPayment({
+      orderId,
+      orderName,
+      successUrl: `${window.location.origin}/payments/success`,
+      failUrl: `${window.location.origin}/payments/fail`,
+    });
 
-    } catch (err) {
-      console.error("결제 요청 실패:", err);
-      alert("결제 요청 중 오류가 발생했습니다.");
-    }
-  };
+  } catch (error) {
+    console.error("결제 요청 실패:", error);
+    alert("결제 요청 중 오류가 발생했습니다.");
+  }
+};
 
   return (
     <div className="min-h-screen bg-slate-50 pt-24 pb-16">
