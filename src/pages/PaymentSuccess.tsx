@@ -1,10 +1,9 @@
 // src/pages/PaymentSuccess.tsx
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axiosInstance from "@/api/axiosInstance";
 
 interface ConfirmResponse {
-  // 백엔드에서 반환해줄 구조에 맞게 나중에 수정
   orderId: string;
   amount: number;
   paymentKey: string;
@@ -33,17 +32,15 @@ function PaymentSuccess() {
 
     (async () => {
       try {
-        const BASE = import.meta.env.VITE_API_BASE_URL; // 백엔드 기본 URL
+        const response = await axiosInstance.post(
+          "/api/v1/payments/confirm",
+          {
+            paymentKey,
+            orderId,
+            amount: Number(amount),
+          }
+        );
 
-        const url = `${BASE}/api/v1/payments/confirm`;
-        console.log("BASE =", BASE);
-        console.log("CONFIRM URL =", url);
-
-        const response = await axios.post(url, {
-          paymentKey,
-          orderId,
-          amount: Number(amount),
-        });
         setResult(response.data);
       } catch (err: any) {
         console.error(err);
@@ -111,7 +108,9 @@ function PaymentSuccess() {
           {result.nextBillingDate && (
             <div className="flex justify-between">
               <span className="text-slate-500">다음 결제 예정일</span>
-              <span className="font-medium">{result.nextBillingDate}</span>
+              <span className="font-medium">
+                {result.nextBillingDate}
+              </span>
             </div>
           )}
         </div>
