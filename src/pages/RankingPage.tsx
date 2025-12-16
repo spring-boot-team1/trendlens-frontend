@@ -1,7 +1,7 @@
 {/* 랭킹페이지 */}
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { trendApi } from "@/lib/api";
+import { trendApi } from "@/api/trendApi";
 import { Search, ArrowRight, Sparkles, MoveRight, ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 
