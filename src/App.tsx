@@ -5,6 +5,9 @@ import PaymentCheckout from "./pages/PaymentCheckout";
 import PaymentSuccess  from "./pages/PaymentSuccess";
 import PaymentFail  from "./pages/PaymentFail";
 import SubscriptionStatus  from "./pages/SubscriptionStatus";
+import Login from "./pages/login";
+import Register from "./pages/register";
+import Mypage from "./pages/mypage";
 
 function App() {
   return (
@@ -18,6 +21,9 @@ function App() {
         <Route path="/payments/success" element={<PaymentSuccess />} />
         <Route path="/payments/fail" element={<PaymentFail />} />
         <Route path="/payments/subscriptionstatus" element={<SubscriptionStatus />} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/mypage" element={<Mypage />} />
       </Routes>
     </>
   );
